@@ -1,0 +1,49 @@
+package Slot_Machine;
+
+public class Symbol implements ISymbol {
+	
+	private String path;
+	private int value;
+	
+	//Reel reelComp = new Reel();
+	
+	public void setImage(String p){
+		path = p;
+	}
+	
+	public String getImage(){
+		return path;
+		
+	}
+	
+	public void setValue(int v){
+		value = v;
+	}
+	
+	public int getValue(){
+		return value;
+		
+	}
+	
+	public Symbol symbolCompare(Symbol i, Symbol j, Symbol k){
+		
+		if(i.equals(j) && j.equals(k)){
+			return i;
+		}
+		else if(i.equals(j)){
+			return i;
+		}
+		else if(i.equals(k)){
+			return i;
+		}
+		else if(j.equals(k)){
+			return j;
+		}else{
+			return k;
+		}
+		
+		
+	}
+
+}
+

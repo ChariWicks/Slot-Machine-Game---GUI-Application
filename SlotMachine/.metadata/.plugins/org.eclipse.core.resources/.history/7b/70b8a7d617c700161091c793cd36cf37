@@ -1,0 +1,568 @@
+
+package Slot_Machine;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
+public class Reel extends JFrame {
+	
+	private JPanel reelPanel;
+	private JPanel creditPanel;
+	private JPanel betPanel;
+	private JPanel scorePanel;
+	private JPanel buttonPanel;
+	private JPanel northPanel;
+	private JPanel windowPanel;
+	private JPanel statDetails;
+	private JButton reel1;
+	private JButton reel2;
+	private JButton reel3;
+	private JButton btAddCoin;
+	private JButton btBetOne;
+	private JButton btBetMax;
+	private JButton btReset;
+	private JButton btSpin;
+	private JButton btStatistics;
+	private JButton saveStats;
+	private JLabel lblCoins;
+	private JLabel lblBets;
+	private JLabel lblDisplayCoins;
+	private JLabel lblDisplayBets;
+	private JLabel lblMessage;
+	private JLabel lblWins;
+	private JLabel lblLosts;
+	private JLabel lblAvg;
+	private JLabel lblDisWins;
+	private JLabel lblDisLosts;
+	private JLabel lblDisAvg;
+	
+	private int coins = 10;
+	private int bets = 0;
+	private final int betMax = 3;
+	private int wonCoins = 0;
+	private int noOfWins;
+	private int noOfLosts;
+	private int noOfTimes;
+	
+	private Symbol Seven = new Symbol();
+	private Symbol Bell = new Symbol();
+	private Symbol Watermelon = new Symbol();
+	private Symbol Plum = new Symbol();
+	private Symbol Lemon = new Symbol();
+	private Symbol Cherry = new Symbol();
+	
+	Symbol im;
+	Symbol in;
+	Symbol ik;
+	Symbol ims = new Symbol();
+	private boolean loopT1;
+	private boolean loopT2 = true;
+	private boolean loopT3 = true;
+	
+	public Reel(){
+		
+		ImageIcon imgR1 = new ImageIcon("Images/seven.png");
+		ImageIcon imgR2 = new ImageIcon("Images/bell.png");
+		ImageIcon imgR3 = new ImageIcon("Images/cherry.png");
+		
+		reelPanel = new JPanel();
+		reelPanel.setLayout(new GridLayout(1, 5, 20, 20));
+		reelPanel.setBorder(new LineBorder(Color.BLACK,5));
+		
+		creditPanel = new JPanel();
+		creditPanel.setLayout(new GridLayout(1, 2, 20, 20));
+		
+		betPanel = new JPanel();
+		betPanel.setLayout(new GridLayout(1, 2, 20, 20));
+		
+		scorePanel = new JPanel();
+		scorePanel.setLayout(new BorderLayout(10, 20));
+		
+		buttonPanel = new JPanel();
+		buttonPanel.setLayout(new GridLayout(1, 6, 5, 1));
+		
+		northPanel = new JPanel();
+		northPanel.setLayout(new BorderLayout(5, 5));
+		
+		setLayout(new BorderLayout(30, 30));
+		
+		lblCoins = new JLabel(" Number of credits :- ");
+		creditPanel.add(lblCoins);
+		lblDisplayCoins = new JLabel();
+		lblDisplayCoins.setText(Integer.toString(coins));
+		creditPanel.add(lblDisplayCoins);
+		
+		
+		lblBets = new JLabel(" Bet Area :- ");
+		lblBets.setFont(new Font("Tahoma", 1, 18));
+		betPanel.add(lblBets);
+		lblDisplayBets = new JLabel();
+		lblDisplayBets.setFont(new Font("Tahoma", 1, 18));
+		lblDisplayBets.setText(Integer.toString(bets));
+		betPanel.add(lblDisplayBets);
+		
+		betPanel.add(new JLabel(""));
+		
+		scorePanel.add(creditPanel, BorderLayout.EAST);
+		scorePanel.add(betPanel, BorderLayout.WEST);
+		
+		reel1 = new JButton(imgR1);
+		reelPanel.add(reel1);
+		reel1.setIcon(imgR1);
+		reel2 = new JButton(imgR2);
+		reel2.setIcon(imgR2);
+		reelPanel.add(reel2);
+		reel3 = new JButton(imgR3);
+		reel3.setIcon(imgR3);
+		reelPanel.add(reel3);
+		
+		northPanel.add(scorePanel, BorderLayout.NORTH);
+		northPanel.add(reelPanel, BorderLayout.SOUTH);
+		
+		btAddCoin = new JButton("Add Coin");
+		buttonPanel.add(btAddCoin);
+		btBetOne = new JButton("Bet One");
+		buttonPanel.add(btBetOne);
+		btBetMax = new JButton("Bet Max");
+		buttonPanel.add(btBetMax);
+		btReset = new JButton("Reset");
+		buttonPanel.add(btReset);
+		btSpin = new JButton("Spin");
+		buttonPanel.add(btSpin);
+		btStatistics = new JButton("Statistics");
+		buttonPanel.add(btStatistics);
+		
+		
+		add(northPanel, BorderLayout.NORTH);
+		add(buttonPanel, BorderLayout.CENTER);
+		lblMessage = new JLabel(" ");
+		add(lblMessage, BorderLayout.SOUTH);
+		
+		btSpin.addActionListener(new Spin());
+		btReset.addActionListener(new Reset());
+		btAddCoin.addActionListener(new AddCoin());
+		btBetOne.addActionListener(new BetOne());
+		btBetMax.addActionListener(new BetMax());
+		reel1.addActionListener(new Reel1());
+		reel2.addActionListener(new Reel2());
+		reel3.addActionListener(new Reel3());
+		btStatistics.addActionListener(new Stat());
+	}
+	
+	Reel(String btnStatisTxt){
+		
+		windowPanel = new JPanel();
+		windowPanel.setLayout(new BorderLayout(10, 20));
+		statDetails = new JPanel();
+		statDetails.setLayout(new GridLayout(3, 2, 20, 20));
+		
+		
+		lblWins = new JLabel(" No of wins :-");
+		lblDisWins = new JLabel(" 0 ");
+		lblLosts = new JLabel(" No of losts :-");
+		lblDisLosts = new JLabel(" 0 ");
+		lblAvg = new JLabel(" Average number of credits :-");
+		lblDisAvg = new JLabel(" 0 ");
+		statDetails.add(lblWins);
+		statDetails.add(lblDisWins);
+		statDetails.add(lblLosts);
+		statDetails.add(lblDisLosts);
+		statDetails.add(lblAvg);
+		statDetails.add(lblDisAvg);
+		
+				
+		saveStats = new JButton(btnStatisTxt);
+		add(statDetails, BorderLayout.NORTH);
+		add(saveStats, BorderLayout.SOUTH);
+		lblDisWins.setText(Integer.toString(noOfWins));
+	}
+	private class Stat implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			statisticWindow();
+			System.out.println("fgh");
+			System.out.print(Integer.toString(noOfWins));
+			//lblDisWins.setText(Integer.toString(noOfWins));
+			
+		}
+		
+		
+	}
+	
+	private class Reel1 implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			loopT1 = false;
+			loopT2 = false;
+			loopT3 = false;
+			
+			System.out.println("Smile");
+			
+			ims.symbolCompare(im, in, ik);
+			calculateCredit();
+			
+		}
+		
+	}
+	
+	private class Reel2 implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			loopT1 = false;
+			loopT2 = false;
+			loopT3 = false;
+			if(  (reel1.getIcon().equals(reel2.getIcon())  )){
+				
+			}
+			
+		}
+		
+	}
+
+	private class Reel3 implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			loopT1 = false;
+			loopT2 = false;
+			loopT3 = false;
+			if(  (reel1.getIcon().equals(reel2.getIcon())  )){
+				//System.out.println("win");
+				//System.out.println(im.getValue());
+				//ims.symbolCompare(im, in);
+			}
+			
+			
+		}
+	
+	}
+
+	
+	private class BetMax implements ActionListener{
+		
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			if(coins <= 2 ){
+				
+				JOptionPane.showMessageDialog(northPanel, "You don't have enough credits to bet!", "-- No credits --", JOptionPane.ERROR_MESSAGE);
+				
+			}
+			else{
+				
+				bets = bets + betMax;
+				coins = coins - betMax;
+				lblDisplayBets.setText(Integer.toString(bets));
+				lblDisplayCoins.setText(Integer.toString(coins));
+				
+			}
+			
+		}
+		
+	}
+	
+	private class BetOne implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			if("0".equals(lblDisplayCoins.getText() )){
+				
+				JOptionPane.showMessageDialog(northPanel, "You don't have enough credits to bet!", "-- No credits --", JOptionPane.ERROR_MESSAGE);
+				
+			}
+			else{
+				
+				bets++;
+				coins--;
+				lblDisplayBets.setText(Integer.toString(bets));
+				lblDisplayCoins.setText(Integer.toString(coins));
+				
+			}
+			
+			
+		}
+		
+	}
+	
+	private class Reset implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			coins = coins + bets;
+			bets = 0;
+			
+			lblDisplayCoins.setText(Integer.toString(coins));
+			lblDisplayBets.setText(Integer.toString(bets));
+			
+			
+		}
+		
+	}
+	
+	private class AddCoin implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			coins++;
+			lblDisplayCoins.setText(Integer.toString(coins));
+		
+		}
+		
+	}
+	
+	private class Spin implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			if("0".equals(lblDisplayCoins.getText() )){
+				
+				JOptionPane.showMessageDialog(northPanel, "Cannot play the game with 0 credits!", "-- No credits --", JOptionPane.ERROR_MESSAGE);
+			}
+			else{
+				noOfTimes++;
+				Thread t1 = new Thread(){
+					
+								
+					Symbol[] imgList1 = spin();
+					
+					public void run(){
+						
+						loopT1 = true;
+						
+						while(loopT1){
+							
+							for(int a=0; a<imgList1.length;a++){
+								
+								//System.out.println("******"+imgList1[a].getImage());
+								
+								ImageIcon img1 = new ImageIcon(imgList1[a].getImage());
+								im = new Symbol();
+								im = imgList1[a];
+								reel1.setIcon(img1);
+								
+								try {
+								      Thread.sleep(10000);
+								     } catch (InterruptedException e) {
+								      
+								     }
+							}
+						}
+										
+					
+						
+						
+					}
+					
+				};
+				
+				Thread t2 = new Thread(){
+					
+					//Reel r1 = new Reel();				
+					Symbol[] imgList2 = spin();
+					
+					public void run(){
+						
+						loopT2 = true;
+						
+						while(loopT2){
+							for(int a=0; a<imgList2.length;a++){
+								
+								//System.out.println("------"+imgList2[a].getImage());
+								
+								ImageIcon img2 = new ImageIcon(imgList2[a].getImage());
+								in = new Symbol();
+								in = imgList2[a];
+								reel2.setIcon(img2);
+								
+								
+								try {
+								      Thread.sleep(10000);
+								     } catch (InterruptedException e) {
+								      
+								     }
+							}
+							//co2 = true;
+	
+						}
+				
+						
+						
+					}
+					
+				};
+				
+				Thread t3 = new Thread(){
+					
+					//Reel r1 = new Reel();				
+					Symbol[] imgList3 = spin();
+					
+					public void run(){
+						
+						loopT3 = true;
+						
+						while(loopT3){
+							
+							for(int a=0; a<imgList3.length;a++){
+								
+								//System.out.println("////"+imgList3[a].getImage());
+								
+								ImageIcon img3 = new ImageIcon(imgList3[a].getImage());
+								ik = new Symbol();
+								ik = imgList3[a];
+								reel3.setIcon(img3);
+								
+								try {
+								      Thread.sleep(10000);
+								     } catch (InterruptedException e) {
+								      
+								     }
+							}
+						}
+
+						
+						
+					}
+					
+				};
+				
+				t1.start();
+				t2.start();
+				t3.start();
+			}
+			
+				
+				
+			//System.out.println("Spin");
+			// TODO Auto-generated method stub
+			
+			
+		}
+
+
+
+		
+	}
+	
+	public static void main(String[] args){
+		
+		Reel frame = new Reel();
+		
+		frame.setTitle(" Slot Machine Game ");
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.pack();
+		frame.setSize(580, 380);
+		
+	}
+	
+	public void statisticWindow(){
+		
+        Reel frame2 = new Reel("Save statistics");
+		
+		frame2.setTitle(" Slot Machine Game - Statistics ");
+		frame2.setVisible(true);
+		frame2.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame2.pack();
+		frame2.setSize(400, 250);
+		
+	}
+	
+	public Symbol[] spin(){
+		
+		setObjectValue();
+		setObjectImage();
+		
+		Symbol[] symbolList = {Seven, Bell, Watermelon, Plum, Lemon, Cherry}; 
+		
+		Random rndArr = ThreadLocalRandom.current();
+		
+		for(int i = symbolList.length - 1; i > 0; i--){
+			
+			int index = rndArr.nextInt(i + 1);
+			
+			Symbol swap = symbolList[index];
+			symbolList[index] = symbolList[i];
+			symbolList[i] = swap;
+			
+		}
+		
+	return symbolList;
+		
+	}
+	
+	public void calculateCredit(){
+		
+		if( ims.symbolCompare(im, in, ik).equals(im)){
+			
+			System.out.println("get" + im.getValue());
+			wonCoins = im.getValue() * bets;
+			System.out.println("won" + wonCoins);
+			coins = coins + wonCoins;
+			System.out.println("won coins" + coins);
+			lblDisplayCoins.setText(Integer.toString(coins));
+			noOfWins++;
+			lblMessage.setText(" You win!! You just won " + wonCoins + " coins..") ;
+			
+		}else if(ims.symbolCompare(im, in, ik).equals(in)){
+			
+			System.out.println("get" + in.getValue());
+			wonCoins = im.getValue() * bets;
+			System.out.println("won" + wonCoins);
+			coins = coins + wonCoins;
+			System.out.println("won coins" + coins);
+			lblDisplayCoins.setText(Integer.toString(coins));
+			noOfWins++;
+			lblMessage.setText(" You win!! You just won" + wonCoins + " coins..") ;
+
+		}else if(ims.symbolCompare(im, in, ik).equals(ik)){
+			
+			bets = 0;
+			noOfLosts++;
+			lblDisplayBets.setText(Integer.toString(bets));
+			lblMessage.setText(" You lost!!") ;
+
+		}
+		
+	}
+	
+	public void setObjectValue(){
+		
+		Seven.setValue(7);
+		Bell.setValue(6);
+		Watermelon.setValue(5);
+		Plum.setValue(4);
+		Lemon.setValue(3);
+		Cherry.setValue(2);
+		
+	}
+	
+	public void setObjectImage(){
+		
+		Seven.setImage("Images/seven.png");
+		Bell.setImage("Images/bell.png");
+		Watermelon.setImage("Images/watermelon.png");
+		Plum.setImage("Images/plum.png");
+		Lemon.setImage("Images/lemon.png");
+		Cherry.setImage("Images/cherry.png");
+		
+	}
+
+}

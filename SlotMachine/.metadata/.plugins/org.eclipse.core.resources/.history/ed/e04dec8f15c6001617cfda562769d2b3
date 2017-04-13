@@ -1,0 +1,25 @@
+package Slot_Machine;
+
+public class Symbol implements ISymbol {
+	
+	private String path;
+	private int value;
+	
+	public void setImage(String p){
+		path = p;
+	}
+	
+	public String getImage(){
+		return path;
+		
+	}
+	
+	public void setValue(int v){
+		System.out.println(v);
+	}
+	
+	public void getValue(){
+		
+	}
+
+}

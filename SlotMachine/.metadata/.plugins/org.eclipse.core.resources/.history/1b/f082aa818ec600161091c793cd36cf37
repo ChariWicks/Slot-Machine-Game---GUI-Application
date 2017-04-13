@@ -1,0 +1,51 @@
+package Slot_Machine;
+
+public class Symbol implements ISymbol {
+	
+	private String path;
+	private int value;
+	
+	private Reel reelComp = new Reel();
+	
+	public void setImage(String p){
+		path = p;
+	}
+	
+	public String getImage(){
+		return path;
+		
+	}
+	
+	public void setValue(int v){
+		value = v;
+	}
+	
+	public int getValue(){
+		return value;
+		
+	}
+	
+	public void symbolCompare(Symbol i){
+		
+		System.out.println(i.getValue());
+	
+		
+		
+		//if( reelComp.reel1.getIcon().toString().equals( reelComp.reel2.getIcon().toString()) ||
+			//reelComp.reel1.getIcon().toString().equals( reelComp.reel3.getIcon().toString()) ||
+			//reelComp.reel2.getIcon().toString().equals( reelComp.reel3.getIcon().toString())){
+			
+			//reelComp.bets
+			//reelComp.reel1
+			
+		//}
+		
+		//String tree = reelComp.reel1.getIcon().toString();
+		//System.out.println(tree);
+		//reelComp.reel2.getIcon().toString();
+		//reelComp.reel3.getIcon().toString();
+		
+	}
+
+}
+

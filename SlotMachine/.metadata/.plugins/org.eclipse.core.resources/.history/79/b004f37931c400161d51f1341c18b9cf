@@ -1,0 +1,10 @@
+package Slot_Machine;
+
+public interface ISymbol {
+	
+	public abstract setImage();
+	public abstract getImage();
+	public abstract setValue(int v);
+	public abstract getValue();
+
+}

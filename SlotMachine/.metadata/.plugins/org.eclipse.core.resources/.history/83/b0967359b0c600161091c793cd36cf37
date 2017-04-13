@@ -1,0 +1,11 @@
+package Slot_Machine;
+
+public interface ISymbol {
+	
+	public abstract void setImage(String path);
+	public abstract String getImage();
+	public abstract void setValue(int v);
+	public abstract int getValue();
+	public abstract Symbol symbolCompare();
+
+}
